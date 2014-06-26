@@ -1,5 +1,5 @@
-require "rack/forward/version"
-require "net/http"
+require 'rack/forward/version'
+require 'net/http'
 
 module Rack
   class Forward
@@ -25,9 +25,10 @@ module Rack
         sub_request.content_type = req.content_type
       end
 
-      sub_request["X-Forwarded-For"] = (req.env["X-Forwarded-For"].to_s.split(/, +/) + [req.env['REMOTE_ADDR']]).join(", ")
-      sub_request["Accept-Encoding"] = req.accept_encoding
-      sub_request["Referer"] = req.referer
+      sub_request['X-Forwarded-For'] = (req.env['X-Forwarded-For'].to_s.split(/, +/) + [req.env['REMOTE_ADDR']]).join(', ')
+      sub_request['Accept-Encoding'] = req.accept_encoding
+      sub_request['Referer'] = req.referer
+      sub_request['Cookie']  = req.env['HTTP_COOKIE']
 
       sub_response = Net::HTTP.start(uri.host, uri.port) do |http|
         http.request(sub_request)
